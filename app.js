@@ -72,7 +72,8 @@ app.use((req,res,next)=>{
 // });
 
 const store = MongoStore.create({
-    mongoUrl: dbUrl,
+    clientPromise: mongoose.connection.asPromise(),
+    dbName: mongoose.connection.name,
     collectionName: "sessions",
     crypto: {
         secret: process.env.SECRET,
