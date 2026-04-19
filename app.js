@@ -66,26 +66,26 @@ const PORT = process.env.PORT || 3000;
 
 async function startServer() {
     try {
-        // ✅ 1. Connect DB FIRST
+        //. Connect DB FIRST
         await mongoose.connect(dbUrl);
         console.log(" DB Connected");
 
-        // ✅ 2. Create session store AFTER DB connection
-        const store = MongoStore.create({
-            mongoUrl: dbUrl,
-            dbName: "staynest",
-            collectionName: "sessions",
-            crypto: {
-                secret: process.env.SECRET,
-            },
-            touchAfter: 24 * 3600,
-        });
+       
+    const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    dbName: "staynest",
+    collectionName: "sessions",
+    crypto: {
+        secret: process.env.SECRET,
+    },
+    touchAfter: 24 * 3600,
+});
 
         store.on("error", (e) => {
             console.error("SESSION STORE ERROR:", e);
         });
 
-        // ✅ 3. Session middleware
+        // . Session middleware
         app.set("trust proxy", 1);
 
         app.use(session({
