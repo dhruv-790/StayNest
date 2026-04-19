@@ -1,0 +1,184 @@
+<% layout("/layouts/boilerplate") %>
+
+<style>
+.admin-layout {
+  min-height: 85vh;
+}
+
+.sidebar {
+  width: 240px;
+  background: #FFFFFF;
+  border-radius: 16px;
+  border: 1px solid #EDE5DC;
+}
+
+.sidebar a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  color: #2C1810;
+  text-decoration: none;
+  border-radius: 10px;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.sidebar a:hover {
+  background: #FDDCC8;        /* was #f1f1f1 */
+  color: #C1440E;
+}
+
+.sidebar .active {
+  background: #C1440E;        /* was #ff385c */
+  color: white;
+}
+
+.sidebar .active:hover {
+  background: #A33A0C;
+  color: white;
+}
+
+.content-area {
+  flex: 1;
+}
+
+.stat-card {
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  transition: 0.3s;
+  cursor: pointer;
+  background: #FFFFFF;
+  border: 1px solid #EDE5DC !important;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  border-color: #D4B8A8 !important;
+}
+
+.stat-icon {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.stat-number {
+  font-size: 26px;
+  font-weight: bold;
+}
+
+.stat-title {
+  color: #7A4030;             /* was gray */
+}
+
+.header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+.stat-listings .stat-icon,
+.stat-listings .stat-number  { color: #C1440E; }
+
+.stat-bookings .stat-icon,
+.stat-bookings .stat-number  { color: #E05A27; }
+
+.stat-reviews .stat-icon,
+.stat-reviews .stat-number   { color: #A33A0C; }
+
+.stat-users .stat-icon,
+.stat-users .stat-number     { color: #7A4030; }
+</style>
+
+<div class="container admin-layout mt-4 d-flex gap-4">
+
+  <div class="sidebar shadow p-3">
+
+    <h5 class="mb-3 fw-bold">Admin Panel</h5>
+
+    <a href="/admin/dashboard" class="active">
+      <i class="fa-solid fa-chart-line"></i> Overview
+    </a>
+
+    <a href="/admin/listings">
+      <i class="fa-solid fa-house"></i> Listings
+    </a>
+
+    <a href="/admin/bookings">
+      <i class="fa-solid fa-calendar-check"></i> Bookings
+    </a>
+
+    <a href="/admin/reviews">
+      <i class="fa-solid fa-star"></i> Reviews
+    </a>
+
+    <a href="/admin/users">
+      <i class="fa-solid fa-users"></i> Users
+    </a>
+
+  </div>
+
+  <div class="content-area">
+
+    <div class="header-bar mb-4">
+      <h3 class="fw-bold">Dashboard Overview</h3>
+      <span class="text-muted">Welcome, <%= currUser.username %></span>
+    </div>
+
+    <div class="row g-4">
+
+      <div class="col-md-3">
+        <a href="/admin/listings" style="text-decoration:none;">
+          <div class="card stat-card shadow border-0">
+            <div class="stat-icon text-danger">
+              <i class="fa-solid fa-house"></i>
+            </div>
+            <div class="stat-number text-danger"><%= totalListings %></div>
+            <div class="stat-title">Listings</div>
+          </div>
+        </a>
+      </div>
+
+      <div class="col-md-3">
+        <a href="/admin/bookings" style="text-decoration:none;">
+          <div class="card stat-card shadow border-0">
+            <div class="stat-icon text-primary">
+              <i class="fa-solid fa-calendar-check"></i>
+            </div>
+            <div class="stat-number text-primary"><%= totalBookings %></div>
+            <div class="stat-title">Bookings</div>
+          </div>
+        </a>
+      </div>
+
+      <div class="col-md-3">
+        <a href="/admin/reviews" style="text-decoration:none;">
+          <div class="card stat-card shadow border-0">
+            <div class="stat-icon text-success">
+              <i class="fa-solid fa-star"></i>
+            </div>
+            <div class="stat-number text-success"><%= totalReviews %></div>
+            <div class="stat-title">Reviews</div>
+          </div>
+        </a>
+      </div>
+
+      <div class="col-md-3">
+        <a href="/admin/users" style="text-decoration:none;">
+          <div class="card stat-card shadow border-0">
+            <div class="stat-icon text-dark">
+              <i class="fa-solid fa-users"></i>
+            </div>
+            <div class="stat-number"><%= totalUsers %></div>
+            <div class="stat-title">Users</div>
+          </div>
+        </a>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

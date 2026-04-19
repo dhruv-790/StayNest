@@ -1,0 +1,167 @@
+
+:root {
+  --terra-primary:   #C1440E;
+  --terra-hover:     #A33A0C;
+  --terra-light:     #FDDCC8;
+  --terra-bg:        #FBF5EF;
+  --terra-footer-bg: #EDE5DC;
+  --terra-text:      #2C1810;
+  --terra-muted:     #7A4030;
+  --terra-border:    #EDE5DC;
+}
+
+body {
+  font-family: "Plus Jakarta Sans", sans-serif !important;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--terra-bg);
+  color: var(--terra-text);
+}
+
+.container {
+  flex: 1;
+}
+
+/* Navbar */
+.navbar {
+  height: 4rem;
+  background-color: #FFFFFF;
+  border-bottom: 1px solid var(--terra-border);
+}
+
+.fa-compass {
+  color: var(--terra-primary);  /* was #fe424d */
+  font-size: 2rem;
+}
+
+.nav-link {
+  color: var(--terra-text) !important;
+}
+
+/* Footer */
+.f-info-links a {
+  text-decoration: none;
+  color: var(--terra-text);
+}
+
+.f-info-links a:hover {
+  text-decoration: underline;
+  color: var(--terra-primary);
+}
+
+.f-info-links,
+.f-info-socials,
+.f-info-brand {
+  width: 100%;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+}
+
+.f-info-socials i {
+  margin-right: 1rem;
+  font-size: 1.2rem;
+  color: var(--terra-muted);
+}
+
+.f-info-socials i:hover {
+  color: var(--terra-primary);
+}
+
+.f-info {
+  text-align: center;
+  display: flex;
+  height: 8rem;
+  background-color: var(--terra-footer-bg);  /* was #ebebeb */
+  align-items: space-evenly;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Cards */
+.listing-card {
+  border: none !important;
+  margin: 2rem;
+  background-color: transparent;
+}
+
+.card-img-top {
+  border-radius: 1rem !important;
+  width: 100% !important;
+  object-fit: cover !important;
+}
+
+.card-body {
+  padding: 0 !important;
+}
+
+.card-text {
+  font-weight: 400 !important;
+  color: var(--terra-muted);
+}
+
+.listing-link {
+  text-decoration: none;
+  color: var(--terra-text);
+}
+
+/* Card hover effect */
+.card-img-overlay {
+  opacity: 0;
+}
+
+.card-img-overlay:hover {
+  opacity: 0.15;
+  background-color: var(--terra-light);  /* was white */
+}
+
+/* New listing page */
+.add-btn {
+  background-color: var(--terra-primary) !important;  /* was #fe424d */
+  border: none !important;
+  color: #fff !important;
+}
+
+.add-btn:hover {
+  background-color: var(--terra-hover) !important;
+}
+
+/* Edit page */
+.edit-btn {
+  background-color: var(--terra-primary) !important;  /* was #fe424d */
+  border: none !important;
+  color: #fff !important;
+}
+
+.edit-btn:hover {
+  background-color: var(--terra-hover) !important;
+}
+
+/* Show page */
+.show-img {
+  height: 30vh !important;
+  object-fit: cover !important;
+  border-radius: 1rem;
+}
+
+.btns {
+  display: flex;
+}
+
+.show-card {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Active filter chip */
+.filters a.active {
+  background: var(--terra-primary);  /* was black */
+  color: #fff;
+  border-color: var(--terra-primary);
+}
+
+.filters a {
+  color: var(--terra-text);
+  border-color: var(--terra-border);
+}

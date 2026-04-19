@@ -1,0 +1,108 @@
+<% layout("/layouts/boilerplate") %>
+
+<style>
+.review-card {
+  border-radius: 16px;
+  transition: 0.3s;
+}
+
+.review-card:hover {
+  transform: translateY(-5px);
+}
+
+.empty-box {
+  max-width: 500px;
+  border-radius: 16px;
+}
+
+.empty-icon {
+  font-size: 60px;
+  color: #6c757d;
+}
+
+.rating {
+  color: #ffc107;
+}
+</style>
+
+<div class="container mt-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold">All Reviews</h3>
+  </div>
+
+  <% if(reviews.length === 0) { %>
+
+    <div class="d-flex justify-content-center align-items-center" style="min-height: 50vh;">
+      
+      <div class="card empty-box shadow p-4 text-center">
+
+        <div class="mb-3">
+          <i class="fa-regular fa-comment-dots empty-icon"></i>
+        </div>
+
+        <h5>No reviews yet</h5>
+        <p class="text-muted">Be the first to share your experience.</p>
+
+        <a href="/listings" class="btn btn-danger mt-2">
+          Explore Listings
+        </a>
+
+      </div>
+
+    </div>
+
+  <% } else { %>
+
+    <div class="row g-4">
+
+      <% reviews.forEach(r => { %>
+
+        <div class="col-md-4">
+
+          <div class="card review-card shadow border-0 p-3">
+
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h6 class="fw-semibold mb-0">
+                <i class="fa-solid fa-user me-1"></i>
+                <%= r.author.username %>
+              </h6>
+
+              <% if(r.rating) { %>
+                <div class="rating">
+                  <% for(let i = 0; i < r.rating; i++) { %>
+                    <i class="fa-solid fa-star"></i>
+                  <% } %>
+                </div>
+              <% } %>
+            </div>
+
+            <p class="text-muted mb-3">
+              "<%= r.comment %>"
+            </p>
+
+            <div class="d-flex justify-content-between">
+
+              <a href="/listings/<%= r.listing?._id %>" class="btn btn-sm btn-outline-dark">
+                View Listing
+              </a>
+
+              <form method="POST" action="/reviews/<%= r._id %>?_method=DELETE">
+                <button class="btn btn-sm btn-outline-danger">
+                  Delete
+                </button>
+              </form>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      <% }) %>
+
+    </div>
+
+  <% } %>
+
+</div>

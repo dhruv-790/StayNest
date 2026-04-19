@@ -1,0 +1,174 @@
+<% layout("/layouts/boilerplate") %>
+
+<style>
+.page-wrap {
+  min-height: 80vh;
+}
+
+.page-header {
+  font-weight: 700;
+  color: #2C1810;
+}
+
+.empty-card {
+  max-width: 520px;
+  border-radius: 16px;
+  border: 1px solid #EDE5DC !important;
+  background: #FFFFFF;
+}
+
+.booking-card {
+  border-radius: 16px;
+  overflow: hidden;
+  transition: transform .2s ease, box-shadow .2s ease;
+  border: 1px solid #EDE5DC !important;
+  background: #FFFFFF;
+}
+
+.booking-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(193,68,14,0.12);
+  border-color: #D4B8A8 !important;
+}
+
+.card-title {
+  font-weight: 600;
+  color: #2C1810;
+}
+
+.meta {
+  font-size: 14px;
+  color: #7A4030;
+}
+
+.meta b {
+  color: #2C1810;
+}
+
+.meta i {
+  color: #B07060;
+}
+
+.btn-primary-custom {
+  background-color: #C1440E;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.btn-primary-custom:hover {
+  background-color: #A33A0C;
+  color: white;
+}
+
+.btn-outline-custom {
+  border-radius: 10px;
+  border: 1px solid #C1440E;
+  color: #C1440E;
+  background: transparent;
+}
+
+.btn-outline-custom:hover {
+  background: #FDDCC8;
+  color: #A33A0C;
+  border-color: #A33A0C;
+}
+
+.btn-explore {
+  border-radius: 10px;
+  border: 1px solid #2C1810;
+  color: #2C1810;
+  background: transparent;
+}
+
+.btn-explore:hover {
+  background: #FDDCC8;
+  border-color: #C1440E;
+  color: #C1440E;
+}
+
+.icon-box {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #FDDCC8;
+  color: #C1440E;
+  margin-right: 8px;
+}
+</style>
+
+<div class="container page-wrap mt-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="page-header">My Bookings</h2>
+    <a href="/listings" class="btn btn-outline-secondary btn-outline-custom">Explore</a>
+  </div>
+
+  <% if(bookings.length === 0) { %>
+    <div class="d-flex justify-content-center align-items-center">
+      <div class="card empty-card shadow p-4 text-center">
+        <div class="mb-3">
+          <i class="fa-regular fa-calendar-xmark" style="font-size:48px;color:#6c757d;"></i>
+        </div>
+        <h5 class="mb-2">No bookings yet</h5>
+        <p class="text-muted mb-3">Start exploring and reserve your first stay.</p>
+        <a href="/listings" class="btn btn-primary-custom px-3">Browse Listings</a>
+      </div>
+    </div>
+  <% } %>
+
+  <div class="row">
+    <% bookings.forEach(booking => { %>
+
+      <div class="col-lg-4 col-md-6 mb-4">
+
+        <div class="card booking-card shadow border-0">
+
+          <div class="card-body p-4">
+
+            <h5 class="card-title mb-3">
+              <span class="icon-box">
+                <i class="fa-solid fa-house"></i>
+              </span>
+              <%= booking.listing.title %>
+            </h5>
+
+            <p class="meta mb-2">
+              <i class="fa-regular fa-calendar me-2 text-secondary"></i>
+              <b>Check-in:</b> <%= booking.checkIn ? new Date(booking.checkIn).toDateString() : "N/A" %>
+            </p>
+
+            <p class="meta mb-2">
+              <i class="fa-regular fa-calendar-check me-2 text-secondary"></i>
+              <b>Check-out:</b> <%= booking.checkOut ? new Date(booking.checkOut).toDateString() : "N/A" %>
+            </p>
+
+            <p class="meta mb-3">
+              <i class="fa-solid fa-user-group me-2 text-secondary"></i>
+              <b>Guests:</b> <%= booking.guests %>
+            </p>
+
+            <div class="d-flex gap-2">
+              <a href="/listings/<%= booking.listing._id %>" class="btn btn-outline-danger btn-sm btn-outline-custom px-3">
+                View Listing
+              </a>
+
+              <a href="/bookings/<%= booking._id %>/confirmation" class="btn btn-primary-custom btn-sm px-3">
+                View Details
+              </a>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    <% }) %>
+  </div>
+
+</div>

@@ -1,0 +1,108 @@
+<% layout("/layouts/boilerplate") %>
+
+<style>
+.booking-card {
+  border-radius: 16px;
+  transition: 0.3s;
+}
+
+.booking-card:hover {
+  transform: translateY(-5px);
+}
+
+.listing-img {
+  height: 180px;
+  object-fit: cover;
+}
+
+.empty-box {
+  max-width: 500px;
+  border-radius: 16px;
+}
+</style>
+
+<div class="container mt-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold">All Bookings</h3>
+  </div>
+
+  <% if(bookings.length === 0) { %>
+
+    <div class="d-flex justify-content-center align-items-center" style="min-height: 50vh;">
+      <div class="card empty-box shadow p-4 text-center">
+        <i class="fa-regular fa-calendar-xmark mb-3" style="font-size: 50px;"></i>
+        <h5>No bookings yet</h5>
+        <p class="text-muted">Bookings will appear here once users reserve listings.</p>
+        <a href="/listings" class="btn btn-danger">Explore Listings</a>
+      </div>
+    </div>
+
+  <% } else { %>
+
+    <div class="row g-4">
+
+      <% bookings.forEach(b => { %>
+
+        <div class="col-md-4">
+
+          <div class="card booking-card shadow border-0">
+
+            <img 
+              src="<%= b.listing.image?.url || 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85' %>" 
+              class="card-img-top listing-img"
+            >
+
+            <div class="card-body">
+
+              <h5 class="fw-semibold mb-2">
+                <%= b.listing.title %>
+              </h5>
+
+              <p class="text-muted mb-1">
+                <i class="fa-solid fa-user"></i>
+                <%= b.user.username %>
+              </p>
+
+              <p class="mb-1">
+                <i class="fa-regular fa-calendar"></i>
+                <b>Check-in:</b> <%= b.checkIn.toDateString() %>
+              </p>
+
+              <p class="mb-2">
+                <i class="fa-regular fa-calendar-check"></i>
+                <b>Check-out:</b> <%= b.checkOut.toDateString() %>
+              </p>
+
+              <p class="mb-3">
+                <i class="fa-solid fa-user-group"></i>
+                <b>Guests:</b> <%= b.guests %>
+              </p>
+
+              <div class="d-flex gap-2 mb-2 ms-1">
+
+                <a href="/listings/<%= b.listing._id %>" class="btn btn-sm btn-outline-dark">
+                  View Listing
+                </a>
+
+                <form method="POST" action="/bookings/<%= b._id %>?_method=DELETE">
+                  <button class="btn btn-sm btn-outline-danger">
+                    Cancel
+                  </button>
+                </form>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      <% }) %>
+
+    </div>
+
+  <% } %>
+
+</div>

@@ -1,0 +1,114 @@
+<% layout("/layouts/boilerplate") %>
+
+<style>
+.listing-card {
+  border-radius: 10px;
+  overflow: hidden;
+  transition: 0.3s;
+  border: 1px solid #EDE5DC !important;
+  background: #FFFFFF;
+}
+
+.listing-card:hover {
+  transform: translateY(-5px);
+  border-color: #D4B8A8 !important;
+}
+
+.listing-img {
+  height: 190px;
+  object-fit: cover;
+}
+
+.empty-box {
+  max-width: 500px;
+  border-radius: 8px;
+  border: 1px solid #EDE5DC !important;
+  background: #FFFFFF;
+}
+
+.empty-icon {
+  color: #C1440E;
+}
+
+body {
+  background-color: #FBF5EF !important;
+}
+</style>
+
+<div class="container mt-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold">All Listings</h3>
+    <a href="/listings/new" class="btn btn-danger">+ Add Listing</a>
+  </div>
+
+  <% if(listings.length === 0) { %>
+
+    <div class="d-flex justify-content-center align-items-center" style="min-height: 50vh;">
+      <div class="card empty-box shadow p-4 text-center">
+        <i class="fa-regular fa-face-smile-beam mb-3" style="font-size: 50px;"></i>
+        <h5>No listings yet</h5>
+        <p class="text-muted">Start by adding your first listing</p>
+        <a href="/listings/new" class="btn btn-danger">Create Listing</a>
+      </div>
+    </div>
+
+  <% } else { %>
+
+    <div class="row g-4">
+
+      <% listings.forEach(l => { %>
+
+        <div class="col-md-4">
+
+          <div class="card listing-card shadow border-0">
+
+            <img 
+              src="<%= l.image?.url || 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85' %>" 
+              class="card-img-top listing-img"
+            >
+
+            <div class="card-body">
+
+              <h5 class="fw-semibold ms-2"><%= l.title %></h5>
+
+              <p class="text-muted mb-1 ms-2">
+                <i class="fa-solid fa-location-dot"></i>
+                <%= l.location %>
+              </p>
+
+              <p class="fw-bold text-danger mb-3 ms-2">
+                ₹<%= l.price %> / night
+              </p>
+
+             <div class="d-flex gap-2 mb-2 ms-2">
+
+                <a href="/listings/<%= l._id %>" class="btn btn-sm btn-outline-dark">
+                  View
+                </a>
+
+                <a href="/listings/<%= l._id %>/edit" class="btn btn-sm btn-outline-primary">
+                  Edit
+                </a>
+
+                <form method="POST" action="/listings/<%= l._id %>?_method=DELETE">
+                  <button class="btn btn-sm btn-outline-danger">
+                    Delete
+                  </button>
+                </form>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      <% }) %>
+
+    </div>
+
+  <% } %>
+
+</div>

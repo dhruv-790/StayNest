@@ -1,0 +1,15 @@
+<div class="container text-center mt-5">
+
+    <h1>🎉 Payment Successful!</h1>
+
+    <p>Your booking is confirmed.</p>
+
+    <h3><%= booking.listing.title %></h3>
+
+    <p>Total Paid: ₹<%= booking.price %></p>
+
+    <a href="/bookings/<%= booking._id %>/confirmation" class="btn btn-success">
+        Download Ticket
+    </a>
+
+</div>

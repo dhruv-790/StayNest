@@ -1,0 +1,198 @@
+
+<% layout("/layouts/boilerplate") %>
+
+<style>
+.tax-info {
+  display: none;
+}
+
+.tax-toggle {
+  border-radius: 1rem;
+  border: 1px solid #EDE5DC;
+  height: 3.25rem;
+  padding: 1rem;
+  margin-left: 1.4rem;
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  color: #2C1810;
+  background: #FFFFFF;
+}
+
+.tax-toggle:hover {
+  box-shadow: 0 2px 8px rgba(193,68,14,0.25);
+  border-color: #D4B8A8;
+}
+
+.filters {
+  display: flex;
+  gap: 25px;
+  overflow-x: auto;
+  padding: 10px 20px;
+  scroll-behavior: smooth;
+}
+
+.filters a {
+  flex: 0 0 auto;
+  text-decoration: none;
+  color: #2C1810;
+  padding: 8px 12px;
+  border-radius: 20px;
+  background: #FDDCC8;
+  white-space: nowrap;
+  border: 1px solid #EDE5DC;
+}
+
+.filters a:hover {
+  background: #C1440E;
+  color: white;
+  border-color: #C1440E;
+}
+
+.filters a.active {
+  background: #C1440E;
+  color: white;
+  border-color: #C1440E;
+}
+
+@media (max-width: 2000px) {
+  .filters::-webkit-scrollbar {
+    height: 3px;
+  }
+
+  .filters::-webkit-scrollbar-thumb {
+    background: rgba(193,68,14,0.2);
+    border-radius: 10px;
+  }
+
+  .filters::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .filters {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(193,68,14,0.2) transparent;
+  }
+}
+</style>
+
+<div class="filters-container">
+
+  <div class="filters">
+   
+
+<a href="/listings"
+   class="<%= !selectedCategory ? 'active' : '' %>">
+   🌍 All
+</a>
+
+  <a href="/listings?category=Trending"
+   class="<%= selectedCategory === 'Trending' ? 'active' : '' %>">
+   🔥 Trending
+  </a>
+
+  
+  <a href="/listings?category=Rooms">🛏 Rooms</a>
+  <a href="/listings?category=Iconic Cities">🏙 Iconic Cities</a>
+  <a href="/listings?category=Mountains">⛰ Mountains</a>
+  <a href="/listings?category=Castles">🏰 Castles</a>
+  <a href="/listings?category=Amazing Pools">🏊 Amazing Pools</a>
+  <a href="/listings?category=Camping">🏕 Camping</a>
+  <a href="/listings?category=Farms">🌾 Farms</a>
+  <a href="/listings?category=Arctic">❄ Arctic</a>
+  <a href="/listings?category=Domes">🏕 Domes</a>
+  <a href="/listings?category=Boats">⛵ Boats</a>
+
+  
+   </div>
+
+    
+
+
+   <div class="tax-toggle">
+
+   <div class="form-check form-switch form-check-reverse">
+
+    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+
+    <label class="form-check-label" for="flexSwitchCheckDefault">
+
+      Display total after taxes 
+    </label>
+   </div>
+
+   </div>
+
+    </div>
+
+
+    <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 ">
+     <% for(let listing of allListings){ %>
+    <a href="/listings/<%=listing._id%>"  class="listing-link">
+
+    <div class="card col listing-card" style="width: 25rem;" >
+      <img src="<%=listing.image.url%>" class="card-img-top" alt="listing_image" style="height:20rem"/>
+
+          <div class="card-img-overlay"></div>
+      <div class="card-body">
+         <p class="card-text">  
+
+           <span class="price" data-price="<%= listing.price %>">
+                    ₹<%= listing.price.toLocaleString("en-IN") %>
+                     </span>/night
+
+                <i class="tax-info"> (incl. GST)</i>
+            </p>
+  </div>
+</div>
+</a>
+<% } %>
+
+</div>
+<!-- <script>
+  if (localStorage.getItem("scrollPosition")) {
+    window.scrollTo(0, localStorage.getItem("scrollPosition"));
+    localStorage.removeItem("scrollPosition");
+  }
+
+  window.addEventListener("beforeunload", function () {
+    localStorage.setItem("scrollPosition", window.scrollY);
+  });
+</script> -->
+
+   
+
+<script id="g0m9e8">
+let taxSwitch = document.getElementById("flexSwitchCheckDefault");
+let prices = document.querySelectorAll(".price");
+let taxInfo = document.querySelectorAll(".tax-info");
+
+// restore toggle state
+if (localStorage.getItem("taxEnabled") === "true") {
+  taxSwitch.checked = true;
+}
+
+function updatePrices() {
+  prices.forEach((priceEl) => {
+    let basePrice = Number(priceEl.getAttribute("data-price"));
+
+    if (taxSwitch.checked) {
+      let finalPrice = Math.round(basePrice * 1.18);
+      priceEl.innerText = "₹" + finalPrice.toLocaleString("en-IN");
+    } else {
+      priceEl.innerText = "₹" + basePrice.toLocaleString("en-IN");
+    }
+  });
+
+  taxInfo.forEach((info) => {
+    info.style.display = taxSwitch.checked ? "inline" : "none";
+  });
+}
+
+updatePrices();
+
+taxSwitch.addEventListener("change", function () {
+  localStorage.setItem("taxEnabled", taxSwitch.checked);
+  updatePrices();
+});
+</script>
