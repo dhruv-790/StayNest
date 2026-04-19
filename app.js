@@ -57,11 +57,6 @@ const dbUrl=process.env.ATLASDB_URL;
 
 
 
-main().then(()=>{
-    console.log("Database connected");
-}).catch((err)=>{
-  console.log(err);
-});
 
 
 
@@ -82,9 +77,9 @@ async function connectDB() {
     return cached.conn;
 }
 
-connectDB().then(() => {
-    console.log("Database connected");
-});
+mongoose.connect(dbUrl)
+  .then(() => console.log("DB connected"))
+  .catch(err => console.log("DB error", err));
 
 
 // async function main (){
@@ -218,6 +213,9 @@ app.use((err,req,res,next)=>{
 });
 
 
+app.get("/", (req, res) => {
+  res.send("Server is working 🚀");
+});
 
 
 const serverless = require("serverless-http");
