@@ -64,10 +64,34 @@ main().then(()=>{
 });
 
 
-async function main (){
-    // await mongoose.connect(MONGO_URL);
-    await mongoose.connect(dbUrl);
+let cached = global.mongoose;
+
+if (!cached) {
+    cached = global.mongoose = { conn: null, promise: null };
 }
+
+async function connectDB() {
+    if (cached.conn) return cached.conn;
+
+    if (!cached.promise) {
+        cached.promise = mongoose.connect(dbUrl).then((mongoose) => {
+            return mongoose;
+        });
+    }
+
+    cached.conn = await cached.promise;
+    return cached.conn;
+}
+
+connectDB().then(() => {
+    console.log("Database connected");
+});
+
+
+// async function main (){
+//     // await mongoose.connect(MONGO_URL);
+//     await mongoose.connect(dbUrl);
+// }
 
 app.use((req,res,next)=>{
     res.locals.mapToken = process.env.MAP_TOKEN;
