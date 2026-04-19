@@ -70,13 +70,13 @@ async function startServer() {
 
        
    const store = MongoStore.create({
-    mongoUrl: dbUrl,  
+   client: mongoose.connection.getClient(),
     dbName: "staynest",
     collectionName: "sessions",
     crypto: {
         secret: process.env.SECRET,
     },
-    touchAfter: 24 * 3600,
+    // touchAfter: 24 * 3600,
 });
 
         store.on("error", (e) => {
