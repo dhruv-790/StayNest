@@ -37,13 +37,29 @@ app.use(express.static(path.join(__dirname,"/public")));
 // const MONGO_URL="mongodb://localhost:27017/wanderlust";
 const dbUrl=process.env.ATLASDB_URL;
 
-if (!dbUrl) {
-    console.error(" ATLASDB_URL is missing in environment variables");
+if (!process.env.SECRET) {
+    throw new Error("SECRET is missing ❌");
 }
-mongoose.connect(dbUrl)
-  .then(() => console.log(" DB Connected"))
-  .catch(err => console.log(" DB Error:", err));
 
+if (!dbUrl) {
+    throw new Error("ATLASDB_URL is missing ❌");
+}
+
+async function startServer() {
+    try {
+        await mongoose.connect(dbUrl);
+        console.log(" DB Connected");
+
+        app.listen(PORT, () => {
+            console.log(`Server started on port ${PORT}`);
+        });
+
+    } catch (err) {
+        console.log(" DB Error:", err);
+    }
+}
+
+startServer();
 
 
 
@@ -70,12 +86,13 @@ app.use((req,res,next)=>{
 //     // res.send("Listings added");
 // });
 
-const store=MongoStore.create({
-    mongoUrl:dbUrl ,
-    crypto:{
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    collectionName: "sessions",
+    crypto: {
         secret: process.env.SECRET,
     },
-    touchAfter: 24 * 60 * 60 // 1 day
+    touchAfter: 24 * 3600,
 });
 
 store.on("error", function (e) {
@@ -86,12 +103,15 @@ const sessionOptions={
     store,
     secret:process.env.SECRET,
     resave:false,
-    saveUninitialized:true,
-    cookie:{
-        expires:new Date(Date.now()+7*24*60*60*1000),
-        maxAge:7*24*60*60*1000,
-        httpOnly:true,
-    }
+    saveUninitialized:false,
+
+    cookie: {
+    expires: new Date(Date.now() + 7*24*60*60*1000),
+    maxAge: 7*24*60*60*1000,
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production", 
+    sameSite: "lax"
+}
 };
 
 // const sessionOptions = {
@@ -105,6 +125,7 @@ const sessionOptions={
 //     }
 // };
 
+app.set("trust proxy", 1);
 app.use(session(sessionOptions));
 app.use(flash());
 app.use(passport.initialize());
@@ -118,9 +139,14 @@ passport.deserializeUser(User.deserializeUser());
 app.use((req,res,next)=>{
     res.locals.success=req.flash("success");
     res.locals.error=req.flash("error");
-    res.locals.currUser = req.user;
+    res.locals.currUser = req.user||null;
 
     next();
+});
+
+
+app.get("/", (req, res) => {
+    res.send("Server is working 🚀");
 });
 
 app.use("/bookings", bookingRoutes);
@@ -135,20 +161,23 @@ app.use("/admin", adminRoutes);
 
 app.use("/listings",listingRouter);
 app.use("/listings/:id/reviews",reviewRouter);
+
 app.use("/",userRouter);
 
 app.use((req,res,next)=>{
     next(new ExpressError(404,"Page not found babyy"));
 });
 
-app.use((err,req,res,next)=>{
-    let{statusCode=500,message="Something went wrong!" }=err;
-    res.status(statusCode).render("error.ejs",{message});
+app.use((err, req, res, next) => {
+    let { statusCode = 500, message = "Something went wrong!" } = err;
+
+    if (res.headersSent) {
+        return next(err);
+    }
+
+    return res.status(statusCode).render("error.ejs", { message });
 });
 
-app.get("/", (req, res) => {
-    res.send("Server is working 🚀");
-});
 
 
 const PORT = process.env.PORT || 3000;
