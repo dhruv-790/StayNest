@@ -45,21 +45,6 @@ if (!dbUrl) {
     throw new Error("ATLASDB_URL is missing ❌");
 }
 
-async function startServer() {
-    try {
-        await mongoose.connect(dbUrl);
-        console.log(" DB Connected");
-
-        app.listen(PORT, () => {
-            console.log(`Server started on port ${PORT}`);
-        });
-
-    } catch (err) {
-        console.log(" DB Error:", err);
-    }
-}
-
-startServer();
 
 
 
@@ -146,8 +131,9 @@ app.use((req,res,next)=>{
 
 
 app.get("/", (req, res) => {
-    res.send("Server is working 🚀");
+    res.redirect("/listings");
 });
+
 
 app.use("/bookings", bookingRoutes);
 // app.get("/demoUser",async(req,res)=>{
@@ -182,6 +168,18 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT,()=>{
-    console.log("Server started on port 3000");
-});
+async function startServer() {
+    try {
+        await mongoose.connect(dbUrl);
+        console.log(" DB Connected");
+
+        app.listen(PORT, () => {
+            console.log(`Server started on port ${PORT}`);
+        });
+
+    } catch (err) {
+        console.log(" DB Error:", err);
+    }
+}
+
+startServer();
