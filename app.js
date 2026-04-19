@@ -25,7 +25,7 @@ const userRouter = require("./routes/user.js");
 const bookingRoutes = require("./routes/booking");
 const adminRoutes = require("./routes/admin");
 
-// ------------------ BASIC SETUP ------------------
+
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -35,7 +35,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "/public")));
 
-// ------------------ ENV CHECK ------------------
+
 
 const dbUrl = process.env.ATLASDB_URL;
 
@@ -47,20 +47,18 @@ if (!dbUrl) {
     throw new Error("ATLASDB_URL is missing ❌");
 }
 
-// ------------------ LOCALS ------------------
+
 
 app.use((req, res, next) => {
     res.locals.mapToken = process.env.MAP_TOKEN;
     next();
 });
 
-// ------------------ ROUTES (basic) ------------------
 
 app.get("/", (req, res) => {
     res.redirect("/listings");
 });
 
-// ------------------ START SERVER ------------------
 
 const PORT = process.env.PORT || 3000;
 
@@ -89,7 +87,7 @@ async function startServer() {
         app.set("trust proxy", 1);
 
         app.use(session({
-            store,
+           
             secret: process.env.SECRET,
             resave: false,
             saveUninitialized: false,
@@ -102,7 +100,7 @@ async function startServer() {
             }
         }));
 
-        // ✅ 4. Passport AFTER session
+        // Passport AFTER session
         app.use(flash());
         app.use(passport.initialize());
         app.use(passport.session());
@@ -111,7 +109,7 @@ async function startServer() {
         passport.serializeUser(User.serializeUser());
         passport.deserializeUser(User.deserializeUser());
 
-        // ✅ 5. Flash + locals
+        //  Flash + locals
         app.use((req, res, next) => {
             res.locals.success = req.flash("success");
             res.locals.error = req.flash("error");
@@ -119,7 +117,7 @@ async function startServer() {
             next();
         });
 
-        // ------------------ MAIN ROUTES ------------------
+        //  MAIN ROUTES
 
         app.use("/bookings", bookingRoutes);
         app.use("/admin", adminRoutes);
@@ -127,13 +125,13 @@ async function startServer() {
         app.use("/listings/:id/reviews", reviewRouter);
         app.use("/", userRouter);
 
-        // ------------------ 404 ------------------
+        
 
         app.use((req, res, next) => {
             next(new ExpressError(404, "Page not found babyy"));
         });
 
-        // ------------------ ERROR HANDLER ------------------
+
 
         app.use((err, req, res, next) => {
             let { statusCode = 500, message = "Something went wrong!" } = err;
@@ -145,7 +143,7 @@ async function startServer() {
             res.status(statusCode).render("error.ejs", { message });
         });
 
-        // ✅ 6. Start server LAST
+        
         app.listen(PORT, () => {
             console.log(`Server started on port ${PORT}`);
         });
