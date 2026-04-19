@@ -37,7 +37,9 @@ app.use(express.static(path.join(__dirname,"/public")));
 // const MONGO_URL="mongodb://localhost:27017/wanderlust";
 const dbUrl=process.env.ATLASDB_URL;
 
-
+if (!dbUrl) {
+    console.error(" ATLASDB_URL is missing in environment variables");
+}
 mongoose.connect(dbUrl)
   .then(() => console.log(" DB Connected"))
   .catch(err => console.log(" DB Error:", err));
@@ -86,7 +88,7 @@ const sessionOptions={
     resave:false,
     saveUninitialized:true,
     cookie:{
-        expires:new Date(Date.now()+7*24*60*60*10000),
+        expires:new Date(Date.now()+7*24*60*60*1000),
         maxAge:7*24*60*60*1000,
         httpOnly:true,
     }
@@ -117,7 +119,7 @@ app.use((req,res,next)=>{
     res.locals.success=req.flash("success");
     res.locals.error=req.flash("error");
     res.locals.currUser = req.user;
-    
+
     next();
 });
 
@@ -149,7 +151,8 @@ app.get("/", (req, res) => {
 });
 
 
+const PORT = process.env.PORT || 3000;
 
-app.listen(3000,()=>{
+app.listen(PORT,()=>{
     console.log("Server started on port 3000");
 });
