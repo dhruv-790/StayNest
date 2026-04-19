@@ -73,6 +73,7 @@ app.use((req,res,next)=>{
 
 const store = MongoStore.create({
     mongoUrl: dbUrl,
+     dbName: "staynest",
     collectionName: "sessions",
     crypto: {
         secret: process.env.SECRET,
