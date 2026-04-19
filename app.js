@@ -87,7 +87,7 @@ async function startServer() {
         app.set("trust proxy", 1);
 
         app.use(session({
-           
+           client: mongoose.connection.getClient(),
             secret: process.env.SECRET,
             resave: false,
             saveUninitialized: false,
