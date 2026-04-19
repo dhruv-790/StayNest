@@ -69,14 +69,13 @@ async function startServer() {
         console.log(" DB Connected");
 
        
-    const store = MongoStore.create({
-    mongoUrl: dbUrl,
+   const store = MongoStore.create({
+    client: mongoose.connection.getClient(),  
     dbName: "staynest",
     collectionName: "sessions",
     crypto: {
         secret: process.env.SECRET,
     },
-    touchAfter: 24 * 3600,
 });
 
         store.on("error", (e) => {
@@ -87,7 +86,7 @@ async function startServer() {
         app.set("trust proxy", 1);
 
         app.use(session({
-           client: mongoose.connection.getClient(),
+          store: store,
             secret: process.env.SECRET,
             resave: false,
             saveUninitialized: false,
